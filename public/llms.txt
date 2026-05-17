@@ -1,0 +1,27 @@
+# Harshitha K.L — Personal Discovery Engine
+# https://foundersoffice.xyz
+
+> Product builder who ships 0-1, builds AI agents, and solves problems end to end.
+> Currently seeking Founder's Office at Gushwork.
+> Built this discovery engine using the same AEO principles Gushwork uses for brands.
+
+## Profile
+- About: https://foundersoffice.xyz/feeds/about
+- Projects: https://foundersoffice.xyz/feeds/projects
+- Target company: https://foundersoffice.xyz/feeds/gushwork
+- Blog: https://foundersoffice.xyz/blog
+- Contact: klharshitha1@gmail.com
+
+## Topics covered
+- Founder's Office at AI startups
+- Product thinking in Founder's Office
+- AEO and AI search optimization
+- 0-1 product building India
+- Growth at early stage AI startups
+- Hiring at funded AI startups India 2026
+
+## About this site
+This site is a Personal Discovery Engine built by Harshitha K.L.
+It uses Answer Engine Optimization (AEO) to appear in AI search results
+when founders and recruiters search for Founder's Office candidates.
+The irony: it was built using Gushwork's own AEO methodology.
