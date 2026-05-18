@@ -27,12 +27,12 @@ export default function Marquee({ items }: MarqueeProps) {
     <div className="w-full bg-[#7C3AED] overflow-hidden flex items-center py-3 gap-4">
       {/* Lottie runner */}
       {animData && (
-        <div className="flex-shrink-0 w-[58px] h-[58px] ml-2">
+        <div className="flex-shrink-0 w-[58px] h-[58px] ml-2" style={{ mixBlendMode: 'screen' }}>
           <Lottie
             animationData={animData}
             loop
             autoplay
-            style={{ width: 58, height: 58 }}
+            style={{ width: 58, height: 58, background: 'transparent' }}
           />
         </div>
       )}
