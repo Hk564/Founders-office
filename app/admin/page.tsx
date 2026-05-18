@@ -164,17 +164,174 @@ function MemoryTab() {
   )
 }
 
+// ── AEO Score Helper ──
+function aeoScore(article: any): { score: number; factors: { label: string; pass: boolean; tip: string }[] } {
+  const content = article.content || ''
+  const title = article.title || ''
+  const meta = article.meta_description || ''
+  const factors = [
+    {
+      label: 'Title is a question or clear answer',
+      pass: title.includes('?') || title.toLowerCase().includes('how') || title.toLowerCase().includes('what') || title.toLowerCase().includes('why'),
+      tip: 'Rephrase title as a question AI engines are likely to be asked',
+    },
+    {
+      label: 'Meta description is 120–160 chars',
+      pass: meta.length >= 120 && meta.length <= 160,
+      tip: `Current: ${meta.length} chars. Aim for 120–160`,
+    },
+    {
+      label: 'Content has H2 headings',
+      pass: content.includes('##'),
+      tip: 'Add ## subheadings to structure the article for AI parsing',
+    },
+    {
+      label: 'Content is 400+ words',
+      pass: content.split(' ').length >= 400,
+      tip: `Current: ~${content.split(' ').length} words. AI engines prefer longer answers`,
+    },
+    {
+      label: 'Mentions target company (Gushwork)',
+      pass: content.toLowerCase().includes('gushwork'),
+      tip: 'Mention Gushwork naturally in the article to build topical association',
+    },
+    {
+      label: 'Mentions Founder\'s Office',
+      pass: content.toLowerCase().includes("founder's office") || content.toLowerCase().includes('founders office'),
+      tip: 'Include "Founder\'s Office" explicitly for AEO targeting',
+    },
+    {
+      label: 'Slug is URL-friendly',
+      pass: /^[a-z0-9-]+$/.test(article.slug || ''),
+      tip: 'Slug should be lowercase with hyphens only',
+    },
+  ]
+  const score = Math.round((factors.filter(f => f.pass).length / factors.length) * 100)
+  return { score, factors }
+}
+
+// ── Article Editor Modal ──
+function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () => void; onSave: () => void }) {
+  const [form, setForm] = useState({
+    title: article.title || '',
+    slug: article.slug || '',
+    meta_description: article.meta_description || '',
+    content: article.content || '',
+  })
+  const [saving, setSaving] = useState(false)
+  const { score, factors } = aeoScore({ ...article, ...form })
+
+  async function save() {
+    setSaving(true)
+    await supabase.from('content_articles').update(form).eq('id', article.id)
+    setSaving(false)
+    onSave()
+    onClose()
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-start justify-center overflow-y-auto py-8 px-4">
+      <div className="bg-[#09090B] border border-[#27272A] rounded-2xl w-full max-w-4xl">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-[#27272A]">
+          <h2 className="text-lg font-semibold">Edit Article</h2>
+          <button onClick={onClose} className="text-[#71717A] hover:text-white text-xl">✕</button>
+        </div>
+
+        <div className="flex gap-0 flex-col lg:flex-row">
+          {/* Editor */}
+          <div className="flex-1 p-6 flex flex-col gap-4">
+            <div>
+              <label className="text-xs text-[#71717A] uppercase tracking-wider mb-1 block">Title</label>
+              <input
+                value={form.title}
+                onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED]"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-[#71717A] uppercase tracking-wider mb-1 block">Slug</label>
+              <input
+                value={form.slug}
+                onChange={e => setForm(f => ({ ...f, slug: e.target.value }))}
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED]"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-[#71717A] uppercase tracking-wider mb-1 block">
+                Meta Description <span className="text-[#52525B]">({form.meta_description.length} chars)</span>
+              </label>
+              <textarea
+                value={form.meta_description}
+                onChange={e => setForm(f => ({ ...f, meta_description: e.target.value }))}
+                rows={2}
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED] resize-none"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-[#71717A] uppercase tracking-wider mb-1 block">
+                Content <span className="text-[#52525B]">(~{form.content.split(' ').length} words)</span>
+              </label>
+              <textarea
+                value={form.content}
+                onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
+                rows={16}
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED] resize-y font-mono"
+              />
+            </div>
+            <button
+              onClick={save}
+              disabled={saving}
+              className="px-4 py-2 bg-[#7C3AED] text-white text-sm rounded-lg hover:bg-[#5B21B6] transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+
+          {/* AEO Panel */}
+          <div className="lg:w-72 p-6 border-t lg:border-t-0 lg:border-l border-[#27272A]">
+            <p className="text-xs uppercase tracking-wider text-[#71717A] mb-3">AEO Score</p>
+            <div className="flex items-center gap-3 mb-6">
+              <div className={`text-3xl font-bold ${score >= 80 ? 'text-green-400' : score >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                {score}%
+              </div>
+              <div className="flex-1 bg-[#27272A] rounded-full h-2">
+                <div
+                  className={`h-2 rounded-full transition-all ${score >= 80 ? 'bg-green-400' : score >= 50 ? 'bg-yellow-400' : 'bg-red-400'}`}
+                  style={{ width: `${score}%` }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              {factors.map((f, i) => (
+                <div key={i} className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className={f.pass ? 'text-green-400' : 'text-red-400'}>{f.pass ? '✓' : '✗'}</span>
+                    <span className="text-xs text-white">{f.label}</span>
+                  </div>
+                  {!f.pass && <p className="text-xs text-[#71717A] ml-5">{f.tip}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Tab 2: Content Queue ──
 function ContentTab() {
   const [articles, setArticles] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [publishing, setPublishing] = useState<string | null>(null)
+  const [editing, setEditing] = useState<any | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
     const { data } = await supabase
       .from('content_articles')
-      .select('id, title, slug, meta_description, status, created_at, source_type')
+      .select('id, title, slug, meta_description, content, status, created_at, source_type')
       .in('status', ['draft', 'approved'])
       .order('created_at', { ascending: false })
     setArticles(data ?? [])
@@ -211,6 +368,14 @@ function ContentTab() {
 
   return (
     <div>
+      {editing && (
+        <ArticleModal
+          article={editing}
+          onClose={() => setEditing(null)}
+          onSave={load}
+        />
+      )}
+
       <h2 className="text-lg font-semibold mb-2">Content Queue</h2>
       <p className="text-[#71717A] text-sm mb-8">
         {articles.length} article{articles.length !== 1 ? 's' : ''} waiting
@@ -220,55 +385,69 @@ function ContentTab() {
         <p className="text-[#52525B]">No drafts. Run Agent 3 to generate articles.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          {articles.map((article) => (
-            <div key={article.id} className="p-5 bg-[#18181B] rounded-2xl border border-[#27272A]">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      article.status === 'approved'
-                        ? 'bg-green-900/40 text-green-400'
-                        : 'bg-[#27272A] text-[#71717A]'
-                    }`}>
-                      {article.status}
-                    </span>
-                    {article.source_type && article.source_type !== 'agent' && (
-                      <span className="text-xs text-[#7C3AED] bg-[#7C3AED]/10 px-2 py-0.5 rounded-full capitalize">
-                        {article.source_type}
+          {articles.map((article) => {
+            const { score } = aeoScore(article)
+            return (
+              <div key={article.id} className="p-5 bg-[#18181B] rounded-2xl border border-[#27272A]">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        article.status === 'approved'
+                          ? 'bg-green-900/40 text-green-400'
+                          : 'bg-[#27272A] text-[#71717A]'
+                      }`}>
+                        {article.status}
                       </span>
-                    )}
+                      {article.source_type && (
+                        <span className="text-xs text-[#7C3AED] bg-[#7C3AED]/10 px-2 py-0.5 rounded-full capitalize">
+                          {article.source_type}
+                        </span>
+                      )}
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        score >= 80 ? 'bg-green-900/40 text-green-400' : score >= 50 ? 'bg-yellow-900/40 text-yellow-400' : 'bg-red-900/40 text-red-400'
+                      }`}>
+                        AEO {score}%
+                      </span>
+                    </div>
+                    <p className="font-medium text-white mb-1">{article.title}</p>
+                    <p className="text-[#71717A] text-sm">{article.meta_description}</p>
                   </div>
-                  <p className="font-medium text-white mb-1">{article.title}</p>
-                  <p className="text-[#71717A] text-sm">{article.meta_description}</p>
-                </div>
-                <div className="flex flex-col gap-2 shrink-0">
-                  {article.status === 'draft' && (
+                  <div className="flex flex-col gap-2 shrink-0">
                     <button
-                      onClick={() => approve(article.id)}
-                      className="px-3 py-1.5 bg-[#7C3AED] text-white text-xs rounded-lg hover:bg-[#5B21B6] transition-colors"
+                      onClick={() => setEditing(article)}
+                      className="px-3 py-1.5 bg-[#27272A] text-white text-xs rounded-lg hover:bg-[#3F3F46] transition-colors"
                     >
-                      Approve
+                      Edit
                     </button>
-                  )}
-                  {article.status === 'approved' && (
+                    {article.status === 'draft' && (
+                      <button
+                        onClick={() => approve(article.id)}
+                        className="px-3 py-1.5 bg-[#7C3AED] text-white text-xs rounded-lg hover:bg-[#5B21B6] transition-colors"
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {article.status === 'approved' && (
+                      <button
+                        onClick={() => publish(article.id, article.slug)}
+                        disabled={publishing === article.id}
+                        className="px-3 py-1.5 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                      >
+                        {publishing === article.id ? 'Publishing...' : 'Publish Live'}
+                      </button>
+                    )}
                     <button
-                      onClick={() => publish(article.id, article.slug)}
-                      disabled={publishing === article.id}
-                      className="px-3 py-1.5 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                      onClick={() => reject(article.id)}
+                      className="px-3 py-1.5 bg-[#27272A] text-[#71717A] text-xs rounded-lg hover:text-red-400 transition-colors"
                     >
-                      {publishing === article.id ? 'Publishing...' : 'Publish Live'}
+                      Delete
                     </button>
-                  )}
-                  <button
-                    onClick={() => reject(article.id)}
-                    className="px-3 py-1.5 bg-[#27272A] text-[#71717A] text-xs rounded-lg hover:text-red-400 transition-colors"
-                  >
-                    Delete
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
