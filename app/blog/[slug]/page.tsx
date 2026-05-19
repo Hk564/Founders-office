@@ -107,25 +107,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           dangerouslySetInnerHTML={{ __html: paragraphs || '' }}
         />
 
-        {/* Author bio */}
-        <div className="mt-16 p-6 rounded-2xl bg-[#EDE9FE] border border-[#DDD6FE]">
-          <p className="text-xs uppercase tracking-wider text-[#7C3AED] font-medium mb-3">About the author</p>
-          <p className="font-semibold text-[#09090B] mb-1">{memory.name}</p>
-          <p className="text-sm text-[#71717A] leading-relaxed mb-3">{memory.bio}</p>
-          <p className="text-sm text-[#71717A]">
-            Seeking{' '}
-            <span className="text-[#7C3AED] font-medium">{memory.target_role}</span>
-            {' '}at{' '}
-            <a
-              href={`https://${memory.target_company_url}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#7C3AED] font-medium hover:underline"
-            >
-              {memory.target_company}
-            </a>
-          </p>
-        </div>
       </div>
 
       <Footer memory={memory} />
