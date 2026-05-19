@@ -3,6 +3,7 @@ import { getMemory } from '@/lib/supabase'
 import { formatDate } from '@/lib/utils'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 export const revalidate = 86400
@@ -78,6 +79,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </h1>
           <p className="text-[#71717A] text-lg leading-relaxed">{article.meta_description}</p>
         </div>
+
+        {/* Hero image */}
+        {article.cover_image && (
+          <div className="mb-12 rounded-2xl overflow-hidden">
+            <Image
+              src={article.cover_image}
+              alt={article.title}
+              width={800}
+              height={450}
+              className="w-full object-cover"
+              priority
+            />
+          </div>
+        )}
 
         {/* Divider */}
         <div className="h-px bg-[#E4E4E7] mb-12" />
