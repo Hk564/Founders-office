@@ -66,11 +66,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Header */}
         <div className="mb-12">
-          {article.source_type && article.source_type !== 'agent' && (
-            <span className="inline-block text-xs font-medium text-[#7C3AED] bg-[#EDE9FE] px-3 py-1 rounded-full mb-4 capitalize">
-              {article.source_type}
-            </span>
-          )}
           {article.published_at && (
             <p className="text-xs text-[#71717A] mb-4">{formatDate(article.published_at)}</p>
           )}
