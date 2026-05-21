@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -15,14 +15,14 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>('memory')
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'memory', label: '🧠 Memory' },
-    { id: 'content', label: '📝 Content Queue' },
-    { id: 'manual', label: '✍️ Manual Input' },
-    { id: 'topics', label: '🗂 Topics' },
-    { id: 'distribution', label: '📤 Distribution' },
-    { id: 'seo', label: '📊 SEO Report' },
-    { id: 'discoveries', label: '🎉 Discoveries' },
-    { id: 'settings', label: '⚙️ Settings' },
+    { id: 'memory', label: 'ðŸ§  Memory' },
+    { id: 'content', label: 'ðŸ“ Content Queue' },
+    { id: 'manual', label: 'âœï¸ Manual Input' },
+    { id: 'topics', label: 'ðŸ—‚ Topics' },
+    { id: 'distribution', label: 'ðŸ“¤ Distribution' },
+    { id: 'seo', label: 'ðŸ“Š SEO Report' },
+    { id: 'discoveries', label: 'ðŸŽ‰ Discoveries' },
+    { id: 'settings', label: 'âš™ï¸ Settings' },
   ]
 
   return (
@@ -30,7 +30,7 @@ export default function AdminPage() {
       {/* Header */}
       <div className="border-b border-[#27272A] px-6 py-4 flex items-center justify-between">
         <div>
-          <p className="text-xs uppercase tracking-widest text-[#7C3AED] font-medium">foundersoffice.xyz</p>
+          <p className="text-xs uppercase tracking-widest text-[#6E4CEF] font-medium">foundersoffice.xyz</p>
           <h1 className="text-xl font-bold">Admin Panel</h1>
         </div>
         <DiscoveryBadge />
@@ -45,7 +45,7 @@ export default function AdminPage() {
               onClick={() => setTab(t.id)}
               className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
                 tab === t.id
-                  ? 'border-[#7C3AED] text-[#7C3AED]'
+                  ? 'border-[#6E4CEF] text-[#6E4CEF]'
                   : 'border-transparent text-[#71717A] hover:text-white'
               }`}
             >
@@ -70,7 +70,7 @@ export default function AdminPage() {
   )
 }
 
-// ── Discovery Badge ──
+// â”€â”€ Discovery Badge â”€â”€
 function DiscoveryBadge() {
   const [count, setCount] = useState(0)
 
@@ -87,19 +87,19 @@ function DiscoveryBadge() {
 
   return (
     <div
-      className="flex items-center gap-2 bg-[#7C3AED] px-4 py-2 rounded-full cursor-pointer"
+      className="flex items-center gap-2 bg-[#6E4CEF] px-4 py-2 rounded-full cursor-pointer"
       onClick={() => {
         localStorage.setItem('discoveries_last_seen', new Date().toISOString())
         setCount(0)
       }}
     >
-      <span>🎉</span>
+      <span>ðŸŽ‰</span>
       <span className="text-sm font-medium">{count} new discovery</span>
     </div>
   )
 }
 
-// ── Tab 1: Memory ──
+// â”€â”€ Tab 1: Memory â”€â”€
 function MemoryTab() {
   const [rows, setRows] = useState<{ id: string; key: string; value: string }[]>([])
   const [saving, setSaving] = useState<string | null>(null)
@@ -121,7 +121,7 @@ function MemoryTab() {
       .eq('id', id)
 
     if (error) {
-      setError('Save failed — please try again.')
+      setError('Save failed â€” please try again.')
     } else {
       setSaved(id)
       setTimeout(() => setSaved(null), 2000)
@@ -147,7 +147,7 @@ function MemoryTab() {
             <textarea
               defaultValue={row.value ?? ''}
               rows={row.value?.length > 80 ? 3 : 1}
-              className="flex-1 bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white resize-none focus:border-[#7C3AED] focus:outline-none"
+              className="flex-1 bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white resize-none focus:border-[#6E4CEF] focus:outline-none"
               onBlur={(e) => {
                 if (e.target.value !== row.value) {
                   saveRow(row.id, row.key, e.target.value)
@@ -155,7 +155,7 @@ function MemoryTab() {
               }}
             />
             <span className="text-xs pt-3 w-12 text-center">
-              {saving === row.id ? '...' : saved === row.id ? '✅' : ''}
+              {saving === row.id ? '...' : saved === row.id ? 'âœ…' : ''}
             </span>
           </div>
         ))}
@@ -164,7 +164,7 @@ function MemoryTab() {
   )
 }
 
-// ── AEO Score Helper ──
+// â”€â”€ AEO Score Helper â”€â”€
 function aeoScore(article: any): { score: number; factors: { label: string; pass: boolean; tip: string }[] } {
   const content = article.content || ''
   const title = article.title || ''
@@ -176,9 +176,9 @@ function aeoScore(article: any): { score: number; factors: { label: string; pass
       tip: 'Rephrase title as a question AI engines are likely to be asked',
     },
     {
-      label: 'Meta description is 120–160 chars',
+      label: 'Meta description is 120â€“160 chars',
       pass: meta.length >= 120 && meta.length <= 160,
-      tip: `Current: ${meta.length} chars. Aim for 120–160`,
+      tip: `Current: ${meta.length} chars. Aim for 120â€“160`,
     },
     {
       label: 'Content has H2 headings',
@@ -210,7 +210,7 @@ function aeoScore(article: any): { score: number; factors: { label: string; pass
   return { score, factors }
 }
 
-// ── Article Editor Modal ──
+// â”€â”€ Article Editor Modal â”€â”€
 function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () => void; onSave: () => void }) {
   const [form, setForm] = useState({
     title: article.title || '',
@@ -235,7 +235,7 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[#27272A]">
           <h2 className="text-lg font-semibold">Edit Article</h2>
-          <button onClick={onClose} className="text-[#71717A] hover:text-white text-xl">✕</button>
+          <button onClick={onClose} className="text-[#71717A] hover:text-white text-xl">âœ•</button>
         </div>
 
         <div className="flex gap-0 flex-col lg:flex-row">
@@ -246,7 +246,7 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
               <input
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED]"
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#6E4CEF]"
               />
             </div>
             <div>
@@ -254,7 +254,7 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
               <input
                 value={form.slug}
                 onChange={e => setForm(f => ({ ...f, slug: e.target.value }))}
-                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED]"
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#6E4CEF]"
               />
             </div>
             <div>
@@ -265,7 +265,7 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
                 value={form.meta_description}
                 onChange={e => setForm(f => ({ ...f, meta_description: e.target.value }))}
                 rows={2}
-                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED] resize-none"
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#6E4CEF] resize-none"
               />
             </div>
             <div>
@@ -276,13 +276,13 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
                 value={form.content}
                 onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
                 rows={16}
-                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#7C3AED] resize-y font-mono"
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#6E4CEF] resize-y font-mono"
               />
             </div>
             <button
               onClick={save}
               disabled={saving}
-              className="px-4 py-2 bg-[#7C3AED] text-white text-sm rounded-lg hover:bg-[#5B21B6] transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-[#6E4CEF] text-white text-sm rounded-lg hover:bg-[#5B21B6] transition-colors disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
@@ -306,7 +306,7 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
               {factors.map((f, i) => (
                 <div key={i} className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className={f.pass ? 'text-green-400' : 'text-red-400'}>{f.pass ? '✓' : '✗'}</span>
+                    <span className={f.pass ? 'text-green-400' : 'text-red-400'}>{f.pass ? 'âœ“' : 'âœ—'}</span>
                     <span className="text-xs text-white">{f.label}</span>
                   </div>
                   {!f.pass && <p className="text-xs text-[#71717A] ml-5">{f.tip}</p>}
@@ -320,7 +320,7 @@ function ArticleModal({ article, onClose, onSave }: { article: any; onClose: () 
   )
 }
 
-// ── Tab 2: Content Queue ──
+// â”€â”€ Tab 2: Content Queue â”€â”€
 function ContentTab() {
   const [articles, setArticles] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -400,7 +400,7 @@ function ContentTab() {
                         {article.status}
                       </span>
                       {article.source_type && (
-                        <span className="text-xs text-[#7C3AED] bg-[#7C3AED]/10 px-2 py-0.5 rounded-full capitalize">
+                        <span className="text-xs text-[#6E4CEF] bg-[#6E4CEF]/10 px-2 py-0.5 rounded-full capitalize">
                           {article.source_type}
                         </span>
                       )}
@@ -423,7 +423,7 @@ function ContentTab() {
                     {article.status === 'draft' && (
                       <button
                         onClick={() => approve(article.id)}
-                        className="px-3 py-1.5 bg-[#7C3AED] text-white text-xs rounded-lg hover:bg-[#5B21B6] transition-colors"
+                        className="px-3 py-1.5 bg-[#6E4CEF] text-white text-xs rounded-lg hover:bg-[#5B21B6] transition-colors"
                       >
                         Approve
                       </button>
@@ -454,7 +454,7 @@ function ContentTab() {
   )
 }
 
-// ── Tab 3: Manual Input ──
+// â”€â”€ Tab 3: Manual Input â”€â”€
 function ManualTab() {
   const [form, setForm] = useState({
     source_type: 'podcast',
@@ -488,7 +488,7 @@ function ManualTab() {
           <select
             value={form.source_type}
             onChange={(e) => setForm({ ...form, source_type: e.target.value })}
-            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#7C3AED] focus:outline-none"
+            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#6E4CEF] focus:outline-none"
           >
             <option value="podcast">Podcast</option>
             <option value="youtube">YouTube</option>
@@ -501,10 +501,10 @@ function ManualTab() {
           <label className="text-xs text-[#71717A] uppercase tracking-wider mb-2 block">Source Name</label>
           <input
             type="text"
-            placeholder="e.g. Wholuck Podcast — Nayrhit B"
+            placeholder="e.g. Wholuck Podcast â€” Nayrhit B"
             value={form.source_name}
             onChange={(e) => setForm({ ...form, source_name: e.target.value })}
-            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#7C3AED] focus:outline-none"
+            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#6E4CEF] focus:outline-none"
           />
         </div>
 
@@ -515,7 +515,7 @@ function ManualTab() {
             placeholder="https://"
             value={form.source_url}
             onChange={(e) => setForm({ ...form, source_url: e.target.value })}
-            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#7C3AED] focus:outline-none"
+            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#6E4CEF] focus:outline-none"
           />
         </div>
 
@@ -528,27 +528,27 @@ function ManualTab() {
             placeholder="Paste your notes here..."
             value={form.raw_notes}
             onChange={(e) => setForm({ ...form, raw_notes: e.target.value })}
-            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white resize-none focus:border-[#7C3AED] focus:outline-none"
+            className="w-full bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white resize-none focus:border-[#6E4CEF] focus:outline-none"
           />
         </div>
 
         <button
           onClick={generate}
           disabled={loading || !form.raw_notes.trim()}
-          className="px-6 py-3 bg-[#7C3AED] text-white rounded-lg font-medium hover:bg-[#5B21B6] transition-colors disabled:opacity-50"
+          className="px-6 py-3 bg-[#6E4CEF] text-white rounded-lg font-medium hover:bg-[#5B21B6] transition-colors disabled:opacity-50"
         >
           {loading ? 'Generating...' : 'Generate Article'}
         </button>
 
         {done && (
-          <p className="text-green-400 text-sm">✅ Article generation triggered. Check Content Queue in a minute.</p>
+          <p className="text-green-400 text-sm">âœ… Article generation triggered. Check Content Queue in a minute.</p>
         )}
       </div>
     </div>
   )
 }
 
-// ── Tab 4: Topics Queue ──
+// â”€â”€ Tab 4: Topics Queue â”€â”€
 function TopicsTab() {
   const [topics, setTopics] = useState<any[]>([])
   const [newTopic, setNewTopic] = useState('')
@@ -576,7 +576,7 @@ function TopicsTab() {
     <div>
       <h2 className="text-lg font-semibold mb-2">Topics Queue</h2>
       <p className="text-[#71717A] text-sm mb-8">
-        {topics.filter((t) => !t.used).length} unused · {topics.filter((t) => t.used).length} used
+        {topics.filter((t) => !t.used).length} unused Â· {topics.filter((t) => t.used).length} used
       </p>
 
       {/* Add topic */}
@@ -587,11 +587,11 @@ function TopicsTab() {
           value={newTopic}
           onChange={(e) => setNewTopic(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && addTopic()}
-          className="flex-1 bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#7C3AED] focus:outline-none"
+          className="flex-1 bg-[#18181B] border border-[#27272A] rounded-lg px-3 py-2 text-sm text-white focus:border-[#6E4CEF] focus:outline-none"
         />
         <button
           onClick={addTopic}
-          className="px-4 py-2 bg-[#7C3AED] text-white text-sm rounded-lg hover:bg-[#5B21B6] transition-colors"
+          className="px-4 py-2 bg-[#6E4CEF] text-white text-sm rounded-lg hover:bg-[#5B21B6] transition-colors"
         >
           Add
         </button>
@@ -607,9 +607,9 @@ function TopicsTab() {
           >
             <div>
               <p className="text-sm text-white">{topic.topic}</p>
-              <p className="text-xs text-[#52525B] mt-1">Priority: {topic.priority} · {topic.competition}</p>
+              <p className="text-xs text-[#52525B] mt-1">Priority: {topic.priority} Â· {topic.competition}</p>
             </div>
-            <span className="text-xs text-[#52525B]">{topic.used ? 'Used ✓' : 'Unused'}</span>
+            <span className="text-xs text-[#52525B]">{topic.used ? 'Used âœ“' : 'Unused'}</span>
           </div>
         ))}
       </div>
@@ -617,7 +617,7 @@ function TopicsTab() {
   )
 }
 
-// ── Tab 5: Distribution ──
+// â”€â”€ Tab 5: Distribution â”€â”€
 function DistributionTab() {
   const [queue, setQueue] = useState<any[]>([])
 
@@ -651,7 +651,7 @@ function DistributionTab() {
 
       {Object.entries(byPlatform).map(([platform, items]) => (
         <div key={platform} className="mb-10">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-[#7C3AED] mb-4 capitalize">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-[#6E4CEF] mb-4 capitalize">
             {platform}
           </h3>
           <div className="flex flex-col gap-3">
@@ -670,7 +670,7 @@ function DistributionTab() {
                   {item.status === 'draft' && (
                     <button
                       onClick={() => updateStatus(item.id, 'approved')}
-                      className="text-xs px-3 py-1 bg-[#7C3AED] text-white rounded-full hover:bg-[#5B21B6] transition-colors"
+                      className="text-xs px-3 py-1 bg-[#6E4CEF] text-white rounded-full hover:bg-[#5B21B6] transition-colors"
                     >
                       Approve
                     </button>
@@ -697,7 +697,7 @@ function DistributionTab() {
   )
 }
 
-// ── Tab 6: SEO Report ──
+// â”€â”€ Tab 6: SEO Report â”€â”€
 function SEOTab() {
   const [report, setReport] = useState<any>(null)
 
@@ -721,12 +721,12 @@ function SEOTab() {
           <p className="text-xs text-[#52525B]">Report date: {report.report_date}</p>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: 'Google Indexed', value: report.google_indexed ?? '—' },
-              { label: 'Bing Indexed', value: report.bing_indexed ?? '—' },
+              { label: 'Google Indexed', value: report.google_indexed ?? 'â€”' },
+              { label: 'Bing Indexed', value: report.bing_indexed ?? 'â€”' },
               { label: 'AI Citations', value: report.perplexity_citations ?? '0' },
             ].map(({ label, value }) => (
               <div key={label} className="p-4 bg-[#18181B] rounded-xl border border-[#27272A] text-center">
-                <p className="text-2xl font-bold text-[#7C3AED]">{value}</p>
+                <p className="text-2xl font-bold text-[#6E4CEF]">{value}</p>
                 <p className="text-xs text-[#71717A] mt-1">{label}</p>
               </div>
             ))}
@@ -748,7 +748,7 @@ function SEOTab() {
   )
 }
 
-// ── Tab 7: Discoveries ──
+// â”€â”€ Tab 7: Discoveries â”€â”€
 function DiscoveriesTab() {
   const [discoveries, setDiscoveries] = useState<any[]>([])
   const [form, setForm] = useState({ platform: 'perplexity', query: '', notes: '' })
@@ -780,7 +780,7 @@ function DiscoveriesTab() {
   return (
     <div>
       <h2 className="text-lg font-semibold mb-8">
-        🎉 Discoveries — {discoveries.length} total
+        ðŸŽ‰ Discoveries â€” {discoveries.length} total
       </h2>
 
       {/* Add manual */}
@@ -813,7 +813,7 @@ function DiscoveriesTab() {
           <button
             onClick={addDiscovery}
             disabled={adding}
-            className="px-4 py-2 bg-[#7C3AED] text-white text-sm rounded-lg hover:bg-[#5B21B6] disabled:opacity-50"
+            className="px-4 py-2 bg-[#6E4CEF] text-white text-sm rounded-lg hover:bg-[#5B21B6] disabled:opacity-50"
           >
             {adding ? 'Adding...' : 'Add Discovery'}
           </button>
@@ -825,25 +825,25 @@ function DiscoveriesTab() {
         {discoveries.map((d) => (
           <div key={d.id} className="p-4 bg-[#18181B] rounded-xl border border-[#27272A]">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg">🎉</span>
+              <span className="text-lg">ðŸŽ‰</span>
               <span className="font-medium capitalize">{d.platform}</span>
               <span className="text-xs text-[#52525B] ml-auto">
                 {new Date(d.discovered_at).toLocaleDateString()}
               </span>
             </div>
-            {d.query && <p className="text-sm text-[#7C3AED]">&ldquo;{d.query}&rdquo;</p>}
+            {d.query && <p className="text-sm text-[#6E4CEF]">&ldquo;{d.query}&rdquo;</p>}
             {d.notes && <p className="text-xs text-[#71717A] mt-1">{d.notes}</p>}
           </div>
         ))}
         {discoveries.length === 0 && (
-          <p className="text-[#52525B]">No discoveries yet. Engine is running — check back soon.</p>
+          <p className="text-[#52525B]">No discoveries yet. Engine is running â€” check back soon.</p>
         )}
       </div>
     </div>
   )
 }
 
-// ── Tab 8: Settings ──
+// â”€â”€ Tab 8: Settings â”€â”€
 function SettingsTab() {
   const [agentRuns, setAgentRuns] = useState<any[]>([])
   const [triggering, setTriggering] = useState<string | null>(null)
@@ -878,9 +878,9 @@ function SettingsTab() {
               key={agent}
               onClick={() => triggerAgent(agent)}
               disabled={triggering === agent}
-              className="px-4 py-2 bg-[#18181B] border border-[#27272A] text-sm text-white rounded-lg hover:border-[#7C3AED] hover:text-[#7C3AED] transition-colors disabled:opacity-50 capitalize"
+              className="px-4 py-2 bg-[#18181B] border border-[#27272A] text-sm text-white rounded-lg hover:border-[#6E4CEF] hover:text-[#6E4CEF] transition-colors disabled:opacity-50 capitalize"
             >
-              {triggering === agent ? '⏳ Triggered' : `Run ${agent}`}
+              {triggering === agent ? 'â³ Triggered' : `Run ${agent}`}
             </button>
           ))}
         </div>
@@ -896,10 +896,10 @@ function SettingsTab() {
             {agentRuns.map((run) => (
               <div key={run.id} className="flex items-center justify-between p-3 bg-[#18181B] rounded-lg border border-[#27272A] text-sm">
                 <div className="flex items-center gap-3">
-                  <span>{run.status === 'success' ? '✅' : run.status === 'skipped' ? '⏭' : '❌'}</span>
+                  <span>{run.status === 'success' ? 'âœ…' : run.status === 'skipped' ? 'â­' : 'âŒ'}</span>
                   <span className="capitalize text-white">{run.agent_name}</span>
                   {run.articles_created !== null && (
-                    <span className="text-xs text-[#7C3AED]">{run.articles_created} articles</span>
+                    <span className="text-xs text-[#6E4CEF]">{run.articles_created} articles</span>
                   )}
                   {run.error_message && (
                     <span className="text-xs text-red-400 truncate max-w-xs">{run.error_message}</span>
@@ -916,3 +916,4 @@ function SettingsTab() {
     </div>
   )
 }
+

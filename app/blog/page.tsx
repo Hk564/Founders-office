@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+﻿import { supabase } from '@/lib/supabase'
 import { getMemory } from '@/lib/supabase'
 import { formatDate } from '@/lib/utils'
 import Footer from '@/components/Footer'
@@ -7,7 +7,7 @@ import Link from 'next/link'
 export const revalidate = 3600
 
 export const metadata = {
-  title: "Blog — Harshitha K.L",
+  title: "Blog â€” Harshitha K.L",
   description: "Articles on Founder's Office, AEO, product building, and growth at AI startups.",
 }
 
@@ -24,7 +24,7 @@ export default async function BlogPage() {
   return (
     <main className="min-h-screen flex flex-col bg-[#FAFAFA]">
       <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-24">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#7C3AED] font-medium mb-3">
+        <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-3">
           All articles
         </p>
         <h1 className="text-4xl md:text-5xl font-bold text-[#09090B] mb-4">Blog</h1>
@@ -42,7 +42,7 @@ export default async function BlogPage() {
               >
                 <div className="flex items-center gap-3 mb-1">
                   {article.source_type && article.source_type !== 'agent' && (
-                    <span className="text-xs font-medium text-[#7C3AED] bg-[#EDE9FE] px-2 py-0.5 rounded-full capitalize">
+                    <span className="text-xs font-medium text-[#6E4CEF] bg-[#EDE9FE] px-2 py-0.5 rounded-full capitalize">
                       {article.source_type}
                     </span>
                   )}
@@ -52,17 +52,17 @@ export default async function BlogPage() {
                     </span>
                   )}
                 </div>
-                <h2 className="text-xl font-semibold text-[#09090B] group-hover:text-[#7C3AED] transition-colors leading-snug">
+                <h2 className="text-xl font-semibold text-[#09090B] group-hover:text-[#6E4CEF] transition-colors leading-snug">
                   {article.title}
                 </h2>
                 <p className="text-[#71717A] text-sm leading-relaxed">{article.meta_description}</p>
-                <p className="text-[#7C3AED] text-sm font-medium mt-1">Read →</p>
+                <p className="text-[#6E4CEF] text-sm font-medium mt-1">Read â†’</p>
               </Link>
             ))}
           </div>
         ) : (
           <div className="text-center py-24">
-            <p className="text-[#71717A] text-lg">No articles yet — engine is warming up.</p>
+            <p className="text-[#71717A] text-lg">No articles yet â€” engine is warming up.</p>
           </div>
         )}
       </div>
@@ -71,3 +71,4 @@ export default async function BlogPage() {
     </main>
   )
 }
+

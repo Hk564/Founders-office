@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
 interface FooterProps {
   memory: Record<string, string>
@@ -19,11 +19,11 @@ export default function Footer({ memory }: FooterProps) {
                 href={`https://${memory.target_company_url}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#7C3AED] hover:underline"
+                className="text-[#6E4CEF] hover:underline"
               >
                 {memory.target_company}&apos;s
               </a>{' '}
-              AEO methodology — to get discovered by them.
+              AEO methodology â€” to get discovered by them.
             </p>
             <p className="text-[#71717A] text-sm">{memory.email}</p>
           </div>
@@ -87,7 +87,7 @@ export default function Footer({ memory }: FooterProps) {
 
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-[#27272A] flex flex-col md:flex-row justify-between gap-3 text-xs text-[#52525B]">
-          <p>© {new Date().getFullYear()} {memory.name}. All rights reserved.</p>
+          <p>Â© {new Date().getFullYear()} {memory.name}. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
@@ -97,3 +97,4 @@ export default function Footer({ memory }: FooterProps) {
     </footer>
   )
 }
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
@@ -24,10 +24,10 @@ export default function Marquee({ items }: MarqueeProps) {
   }, [])
 
   return (
-    <div className="w-full bg-[#7C3AED] overflow-hidden flex items-center py-3 gap-4">
+    <div className="w-full bg-[#6E4CEF] overflow-hidden flex items-center py-3 gap-4">
       {/* Lottie runner */}
       {animData && (
-        <div className="flex-shrink-0 w-[58px] h-[58px] ml-2" style={{ mixBlendMode: 'screen' }}>
+        <div className="flex-shrink-0 w-[58px] h-[58px] ml-2">
           <Lottie
             animationData={animData}
             loop
@@ -48,3 +48,4 @@ export default function Marquee({ items }: MarqueeProps) {
     </div>
   )
 }
+

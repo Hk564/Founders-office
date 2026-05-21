@@ -8,8 +8,8 @@ import { supabase } from '@/lib/supabase'
 export const revalidate = 3600
 
 const projects = [
-  { name: 'Milestones', description: 'E-commerce platform built 0→1 in 3 months', tag: '0-1 Product' },
-  { name: 'Paaltu', description: 'Pet care app — co-founder', tag: 'Co-founder' },
+  { name: 'Mylestones', description: 'E-commerce platform built 0â†’1 in 3 months', tag: '0-1 Product' },
+  { name: 'Paaltu', description: 'Pet socialisation app â€” co-founder', tag: 'Co-founder' },
   { name: 'AI Regulatory Agent', description: 'Automated compliance agent using n8n + GPT', tag: 'AI Agent' },
 ]
 
@@ -46,18 +46,18 @@ export default async function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
 
-      {/* ── MARQUEE HEADER ── */}
+      {/* â”€â”€ MARQUEE HEADER â”€â”€ */}
       <Marquee items={marqueeItems} />
 
-      {/* ── HERO ── */}
+      {/* â”€â”€ HERO â”€â”€ */}
       <section className="flex flex-col items-center justify-center px-6 py-24 md:py-32 text-center bg-[#FAFAFA]">
         <div className="max-w-3xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#7C3AED] font-medium mb-6">
-            Personal Discovery Engine
+          <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-6">
+            Cool, you found me!.
           </p>
           <h1 className="text-5xl md:text-7xl font-bold text-[#09090B] leading-[1.1] mb-6">
             Hi, I&apos;m{' '}
-            <span className="text-[#7C3AED]">
+            <span className="text-[#6E4CEF]">
               {memory.name?.split(' ')[0] || 'Harshitha'}
             </span>.
           </h1>
@@ -68,25 +68,25 @@ export default async function HomePage() {
           {/* Video */}
           <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden bg-[#09090B] aspect-video shadow-2xl group cursor-pointer mb-12">
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-[#7C3AED] flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+              <div className="w-16 h-16 rounded-full bg-[#6E4CEF] flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                 <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
-              <p className="text-[#52525B] text-sm">My intro — 90 seconds</p>
+              <p className="text-[#52525B] text-sm">My intro â€” 90 seconds</p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/blog"
-              className="px-8 py-3 bg-[#7C3AED] text-white rounded-full font-medium hover:bg-[#5B21B6] transition-colors"
+              className="px-8 py-3 bg-[#6E4CEF] text-white rounded-full font-medium hover:bg-[#5B21B6] transition-colors"
             >
               Read the articles
             </Link>
             <a
               href={`mailto:${memory.email}`}
-              className="px-8 py-3 border border-[#E4E4E7] text-[#09090B] rounded-full font-medium hover:border-[#7C3AED] hover:text-[#7C3AED] transition-colors"
+              className="px-8 py-3 border border-[#E4E4E7] text-[#09090B] rounded-full font-medium hover:border-[#6E4CEF] hover:text-[#6E4CEF] transition-colors"
             >
               Get in touch
             </a>
@@ -94,10 +94,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── JOURNEY + SKILLS ── */}
+      {/* â”€â”€ JOURNEY + SKILLS â”€â”€ */}
       <section className="px-6 py-24 bg-[#EDE9FE]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#7C3AED] font-medium mb-3">
+          <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-3">
             Background
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-[#09090B] mb-16">
@@ -107,7 +107,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             {projects.map((project) => (
               <div key={project.name} className="bg-white rounded-2xl p-6 border border-[#E4E4E7] card-hover">
-                <span className="inline-block text-xs font-medium text-[#7C3AED] bg-[#EDE9FE] px-3 py-1 rounded-full mb-4">
+                <span className="inline-block text-xs font-medium text-[#6E4CEF] bg-[#EDE9FE] px-3 py-1 rounded-full mb-4">
                   {project.tag}
                 </span>
                 <h3 className="text-xl font-bold text-[#09090B] mb-2">{project.name}</h3>
@@ -122,7 +122,7 @@ export default async function HomePage() {
               {skills.map((skill) => (
                 <span
                   key={skill}
-                  className="px-4 py-2 bg-white border border-[#E4E4E7] rounded-full text-sm font-medium text-[#09090B] hover:border-[#7C3AED] hover:text-[#7C3AED] transition-colors cursor-default"
+                  className="px-4 py-2 bg-white border border-[#E4E4E7] rounded-full text-sm font-medium text-[#09090B] hover:border-[#6E4CEF] hover:text-[#6E4CEF] transition-colors cursor-default"
                 >
                   {skill}
                 </span>
@@ -132,10 +132,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── WHY NOT ME ── */}
+      {/* â”€â”€ WHY NOT ME â”€â”€ */}
       <section className="px-6 py-24 bg-[#09090B]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#7C3AED] font-medium mb-3">
+          <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-3">
             The proof
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -152,20 +152,20 @@ export default async function HomePage() {
                   <Link
                     key={article.id}
                     href={`/blog/${article.slug}`}
-                    className="group p-5 rounded-2xl border border-[#27272A] hover:border-[#7C3AED] transition-all card-hover"
+                    className="group p-5 rounded-2xl border border-[#27272A] hover:border-[#6E4CEF] transition-all card-hover"
                   >
-                    <p className="text-white font-medium mb-2 group-hover:text-[#7C3AED] transition-colors leading-snug">
+                    <p className="text-white font-medium mb-2 group-hover:text-[#6E4CEF] transition-colors leading-snug">
                       {article.title}
                     </p>
                     <p className="text-[#52525B] text-sm leading-relaxed">{article.meta_description}</p>
-                    <p className="text-[#7C3AED] text-xs mt-3 font-medium">Read →</p>
+                    <p className="text-[#6E4CEF] text-xs mt-3 font-medium">Read â†’</p>
                   </Link>
                 ))}
               </div>
               <div className="mt-10 text-center">
                 <Link
                   href="/blog"
-                  className="inline-block px-8 py-3 border border-[#27272A] text-white rounded-full text-sm font-medium hover:border-[#7C3AED] hover:text-[#7C3AED] transition-colors"
+                  className="inline-block px-8 py-3 border border-[#27272A] text-white rounded-full text-sm font-medium hover:border-[#6E4CEF] hover:text-[#6E4CEF] transition-colors"
                 >
                   View all articles
                 </Link>
@@ -173,15 +173,16 @@ export default async function HomePage() {
             </>
           ) : (
             <div className="text-center py-20">
-              <p className="text-[#52525B] text-lg">Articles loading — engine is running.</p>
+              <p className="text-[#52525B] text-lg">Articles loading â€” engine is running.</p>
               <p className="text-[#71717A] text-sm mt-2">Check back tomorrow.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* â”€â”€ FOOTER â”€â”€ */}
       <Footer memory={memory} />
     </main>
   )
 }
+

@@ -1,7 +1,7 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
-  --purple: #7C3AED;
+  --purple: #6E4CEF;
   --purple-light: #EDE9FE;
   --purple-dark: #5B21B6;
   --black: #09090B;
@@ -65,4 +65,5 @@ body {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #FAFAFA; }
 ::-webkit-scrollbar-thumb { background: #E4E4E7; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #7C3AED; }
+::-webkit-scrollbar-thumb:hover { background: #6E4CEF; }
+
