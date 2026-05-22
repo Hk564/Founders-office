@@ -16,7 +16,7 @@ export default async function BlogPage() {
     getMemory(),
     supabase
       .from('content_articles')
-      .select('id, title, slug, meta_description, published_at, source_type')
+      .select('id, title, slug, meta_description, published_at')
       .eq('status', 'published')
       .order('published_at', { ascending: false }),
   ])
@@ -41,11 +41,6 @@ export default async function BlogPage() {
                 className="group py-8 flex flex-col gap-2 hover:pl-2 transition-all duration-200"
               >
                 <div className="flex items-center gap-3 mb-1">
-                  {article.source_type && article.source_type !== 'agent' && (
-                    <span className="text-xs font-medium text-[#6E4CEF] bg-[#EDE9FE] px-2 py-0.5 rounded-full capitalize">
-                      {article.source_type}
-                    </span>
-                  )}
                   {article.published_at && (
                     <span className="text-xs text-[#71717A]">
                       {formatDate(article.published_at)}
