@@ -147,18 +147,17 @@ export default async function HomePage() {
 
           {articles && articles.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {articles.map((article) => (
                   <Link
                     key={article.id}
                     href={`/blog/${article.slug}`}
-                    className="group p-5 rounded-2xl border border-[#27272A] hover:border-[#6E4CEF] transition-all card-hover"
+                    className="group p-3 rounded-xl border border-[#27272A] hover:border-[#6E4CEF] transition-all card-hover"
                   >
-                    <p className="text-white font-medium mb-2 group-hover:text-[#6E4CEF] transition-colors leading-snug">
+                    <p className="text-white text-sm font-medium mb-1 group-hover:text-[#6E4CEF] transition-colors leading-snug">
                       {article.title}
                     </p>
-                    <p className="text-[#52525B] text-sm leading-relaxed">{article.meta_description}</p>
-                    <p className="text-[#6E4CEF] text-xs mt-3 font-medium">Read â†’</p>
+                    <p className="text-[#6E4CEF] text-xs font-medium mt-1">Read →</p>
                   </Link>
                 ))}
               </div>
