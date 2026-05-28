@@ -13,18 +13,6 @@ export default function Footer({ memory }: FooterProps) {
           {/* Left: identity */}
           <div className="flex flex-col gap-3 max-w-sm">
             <p className="text-xl font-semibold">{memory.name || 'Harshitha K.L'}</p>
-            <p className="text-[#71717A] text-sm leading-relaxed">
-              Built using{' '}
-              <a
-                href={`https://${memory.target_company_url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#6E4CEF] hover:underline"
-              >
-                {memory.target_company}&apos;s
-              </a>{' '}
-          
-            </p>
             <p className="text-[#71717A] text-sm">{memory.email}</p>
           </div>
 
