@@ -23,7 +23,7 @@ export default function Footer({ memory }: FooterProps) {
               >
                 {memory.target_company}&apos;s
               </a>{' '}
-              AEO methodology â€” to get discovered by them.
+          
             </p>
             <p className="text-[#71717A] text-sm">{memory.email}</p>
           </div>

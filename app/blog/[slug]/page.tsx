@@ -1,7 +1,8 @@
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { getMemory } from '@/lib/supabase'
 import { formatDate } from '@/lib/utils'
 import Footer from '@/components/Footer'
+import ArticleEngagement from '@/components/ArticleEngagement'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
-  const [memory, { data: article }] = await Promise.all([
+  const [memory, { data: article }, clapsData, commentsData] = await Promise.all([
     getMemory(),
     supabase
       .from('content_articles')
@@ -36,11 +37,24 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       .eq('slug', slug)
       .eq('status', 'published')
       .single(),
+    supabaseAdmin
+      .from('article_claps')
+      .select('total_claps')
+      .eq('article_slug', slug)
+      .single(),
+    supabaseAdmin
+      .from('article_comments')
+      .select('id, name, message, created_at')
+      .eq('article_slug', slug)
+      .order('created_at', { ascending: false }),
   ])
 
   if (!article) notFound()
 
-  // Convert markdown to simple HTML paragraphs for now
+  const initialClaps = clapsData.data?.total_claps ?? 0
+  const initialComments = commentsData.data ?? []
+
+  // Convert markdown to simple HTML
   const paragraphs = article.content
     ?.split('\n')
     .filter((line: string) => line.trim())
@@ -59,9 +73,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {/* Back */}
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-[#71717A] hover:text-[#7C3AED] transition-colors mb-12"
+          className="inline-flex items-center gap-2 text-sm text-[#71717A] hover:text-[#6E4CEF] transition-colors mb-12"
         >
-          ← Back to blog
+          &larr; Back to blog
         </Link>
 
         {/* Header */}
@@ -100,6 +114,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             [&_p]:text-[#3F3F46] [&_p]:leading-relaxed [&_p]:mb-5
             [&_strong]:font-semibold [&_strong]:text-[#09090B]"
           dangerouslySetInnerHTML={{ __html: paragraphs || '' }}
+        />
+
+        {/* Engagement — claps + comments */}
+        <ArticleEngagement
+          slug={slug}
+          initialClaps={initialClaps}
+          initialComments={initialComments}
         />
 
       </div>
