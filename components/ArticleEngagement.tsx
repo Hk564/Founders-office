@@ -23,149 +23,201 @@ function timeAgo(dateStr: string) {
   const hrs = Math.floor(mins / 60)
   if (hrs < 24) return `${hrs}h ago`
   const days = Math.floor(hrs / 24)
-  return `${days}d ago`
+  if (days < 30) return `${days}d ago`
+  return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
 }
 
 export default function ArticleEngagement({ slug, initialClaps, initialComments }: Props) {
+  // Clap state
   const [totalClaps, setTotalClaps] = useState(initialClaps)
-  const [myClaps, setMyClaps] = useState(() => {
-    if (typeof window === 'undefined') return 0
-    return parseInt(localStorage.getItem(`claps_${slug}`) || '0', 10)
+  const [hasClapped, setHasClapped] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem(`clapped_${slug}`) === 'true'
   })
+  const [clapLoading, setClapLoading] = useState(false)
+  const [burst, setBurst] = useState(false)
+
+  // Comment state
   const [showComments, setShowComments] = useState(false)
   const [comments, setComments] = useState<Comment[]>(initialComments)
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [burst, setBurst] = useState(false)
-  const pendingClaps = useRef(0)
-  const flushTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [submitError, setSubmitError] = useState('')
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  const MAX_CLAPS = 50
+  const nameRef = useRef<HTMLInputElement>(null)
 
-  function handleClap() {
-    if (myClaps >= MAX_CLAPS) return
+  // ── Clap toggle ──────────────────────────────────────────────
+  async function handleClap() {
+    if (clapLoading) return
 
-    const newMyClaps = myClaps + 1
-    setMyClaps(newMyClaps)
-    setTotalClaps((t) => t + 1)
-    localStorage.setItem(`claps_${slug}`, String(newMyClaps))
-    pendingClaps.current += 1
+    const action = hasClapped ? 'unclap' : 'clap'
+    const optimisticCount = hasClapped ? totalClaps - 1 : totalClaps + 1
 
-    // Burst animation
-    setBurst(true)
-    setTimeout(() => setBurst(false), 300)
+    // Optimistic update
+    setHasClapped(!hasClapped)
+    setTotalClaps(optimisticCount)
+    if (!hasClapped) {
+      setBurst(true)
+      setTimeout(() => setBurst(false), 300)
+    }
 
-    // Debounce: flush to API 1s after last clap
-    if (flushTimer.current) clearTimeout(flushTimer.current)
-    flushTimer.current = setTimeout(async () => {
-      const toSend = pendingClaps.current
-      pendingClaps.current = 0
-      await fetch(`/api/claps/${slug}`, {
+    setClapLoading(true)
+    try {
+      const res = await fetch(`/api/claps/${slug}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count: toSend }),
+        body: JSON.stringify({ action }),
       })
-    }, 1000)
+
+      if (!res.ok) throw new Error('Failed')
+
+      const data = await res.json()
+      setTotalClaps(data.total_claps) // sync with server truth
+      localStorage.setItem(`clapped_${slug}`, String(!hasClapped))
+    } catch {
+      // Rollback on error
+      setHasClapped(hasClapped)
+      setTotalClaps(totalClaps)
+    } finally {
+      setClapLoading(false)
+    }
   }
 
+  // ── Comment submit ────────────────────────────────────────────
   async function handleComment(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim() || !message.trim()) return
+    setSubmitError('')
+
+    const trimName = name.trim()
+    const trimMessage = message.trim()
+
+    // Client-side validation
+    if (!trimName) { setSubmitError('Please enter your name.'); nameRef.current?.focus(); return }
+    if (!trimMessage) { setSubmitError('Please write a message.'); return }
+    if (trimName.length > 50) { setSubmitError('Name is too long (max 50 chars).'); return }
+    if (trimMessage.length > 500) { setSubmitError('Message is too long (max 500 chars).'); return }
+
     setSubmitting(true)
+    try {
+      const res = await fetch(`/api/comments/${slug}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimName, message: trimMessage }),
+      })
 
-    const res = await fetch(`/api/comments/${slug}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, message }),
-    })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        setSubmitError(err.error || 'Something went wrong. Try again.')
+        return
+      }
 
-    if (res.ok) {
       const newComment = await res.json()
       setComments((prev) => [newComment, ...prev])
       setName('')
       setMessage('')
+      setSubmitSuccess(true)
+      setTimeout(() => setSubmitSuccess(false), 3000)
+    } catch {
+      setSubmitError('Network error. Please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
     }
-    setSubmitting(false)
   }
-
-  const remaining = MAX_CLAPS - myClaps
 
   return (
     <div className="mt-16">
-      {/* Engagement bar */}
+      {/* ── Engagement bar ── */}
       <div className="flex items-center gap-6 py-6 border-t border-b border-[#E4E4E7]">
 
         {/* Clap button */}
         <div className="flex items-center gap-2">
           <button
             onClick={handleClap}
-            disabled={myClaps >= MAX_CLAPS}
-            title={remaining > 0 ? `${remaining} claps remaining` : 'Max claps reached'}
+            disabled={clapLoading}
+            aria-label={hasClapped ? 'Remove clap' : 'Clap for this article'}
+            title={hasClapped ? 'Click to remove clap' : 'Click to clap'}
             className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-150 select-none
-              ${myClaps > 0
-                ? 'border-[#6E4CEF] bg-[#EDE9FE]'
-                : 'border-[#E4E4E7] bg-white hover:border-[#6E4CEF]'}
+              ${hasClapped ? 'border-[#6E4CEF] bg-[#EDE9FE]' : 'border-[#E4E4E7] bg-white hover:border-[#6E4CEF]'}
               ${burst ? 'scale-125' : 'scale-100'}
-              ${myClaps >= MAX_CLAPS ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              ${clapLoading ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill={myClaps > 0 ? '#6E4CEF' : 'none'} stroke={myClaps > 0 ? '#6E4CEF' : '#71717A'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24"
+              fill={hasClapped ? '#6E4CEF' : 'none'}
+              stroke={hasClapped ? '#6E4CEF' : '#71717A'}
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2" />
               <path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2" />
               <path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8" />
               <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
             </svg>
           </button>
-          <span className="text-sm text-[#71717A] font-medium">{totalClaps}</span>
+          <span className="text-sm text-[#71717A] font-medium tabular-nums">{totalClaps}</span>
         </div>
 
         {/* Comment toggle */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowComments((v) => !v)}
+            aria-label={showComments ? 'Hide comments' : 'Show comments'}
             className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all
-              ${showComments
-                ? 'border-[#6E4CEF] bg-[#EDE9FE]'
-                : 'border-[#E4E4E7] bg-white hover:border-[#6E4CEF]'}`}
+              ${showComments ? 'border-[#6E4CEF] bg-[#EDE9FE]' : 'border-[#E4E4E7] bg-white hover:border-[#6E4CEF]'}`}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={showComments ? '#6E4CEF' : '#71717A'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke={showComments ? '#6E4CEF' : '#71717A'}
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
           </button>
-          <span className="text-sm text-[#71717A] font-medium">{comments.length}</span>
+          <span className="text-sm text-[#71717A] font-medium tabular-nums">{comments.length}</span>
         </div>
 
-        {myClaps > 0 && (
-          <p className="text-xs text-[#6E4CEF] ml-auto">
-            You clapped {myClaps}x
-          </p>
+        {hasClapped && (
+          <p className="text-xs text-[#6E4CEF] ml-auto">You clapped!</p>
         )}
       </div>
 
-      {/* Comments section */}
+      {/* ── Comments section ── */}
       {showComments && (
         <div className="mt-8">
+
           {/* Comment form */}
-          <form onSubmit={handleComment} className="mb-10 flex flex-col gap-3">
+          <form onSubmit={handleComment} noValidate className="mb-10 flex flex-col gap-3">
             <p className="text-sm font-semibold text-[#09090B] mb-1">Leave a response</p>
+
             <input
+              ref={nameRef}
               type="text"
               placeholder="Your name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => { setName(e.target.value); setSubmitError('') }}
               maxLength={50}
-              className="w-full px-4 py-2 rounded-xl border border-[#E4E4E7] text-sm text-[#09090B] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#6E4CEF] transition-colors"
+              disabled={submitting}
+              className="w-full px-4 py-2 rounded-xl border border-[#E4E4E7] text-sm text-[#09090B] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#6E4CEF] transition-colors disabled:opacity-50"
             />
+
             <textarea
               placeholder="Share your thoughts..."
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => { setMessage(e.target.value); setSubmitError('') }}
               maxLength={500}
               rows={3}
-              className="w-full px-4 py-2 rounded-xl border border-[#E4E4E7] text-sm text-[#09090B] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#6E4CEF] transition-colors resize-none"
+              disabled={submitting}
+              className="w-full px-4 py-2 rounded-xl border border-[#E4E4E7] text-sm text-[#09090B] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#6E4CEF] transition-colors resize-none disabled:opacity-50"
             />
+
+            {submitError && (
+              <p className="text-xs text-red-500">{submitError}</p>
+            )}
+            {submitSuccess && (
+              <p className="text-xs text-green-600">Response posted!</p>
+            )}
+
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#A1A1AA]">{message.length}/500</span>
+              <span className={`text-xs ${message.length > 480 ? 'text-orange-500' : 'text-[#A1A1AA]'}`}>
+                {message.length}/500
+              </span>
               <button
                 type="submit"
                 disabled={submitting || !name.trim() || !message.trim()}
@@ -182,7 +234,7 @@ export default function ArticleEngagement({ slug, initialClaps, initialComments 
               {comments.map((c) => (
                 <div key={c.id} className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-[#EDE9FE] flex items-center justify-center text-xs font-bold text-[#6E4CEF]">
+                    <div className="w-7 h-7 rounded-full bg-[#EDE9FE] flex items-center justify-center text-xs font-bold text-[#6E4CEF] flex-shrink-0">
                       {c.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="text-sm font-medium text-[#09090B]">{c.name}</span>
