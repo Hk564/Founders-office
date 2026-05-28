@@ -54,17 +54,29 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const initialClaps = clapsData.data?.total_claps ?? 0
   const initialComments = commentsData.data ?? []
 
-  // Convert markdown to simple HTML
+  // Convert markdown to HTML
+  function inlineFormat(text: string) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')               // *italic*
+  }
+
   const paragraphs = article.content
     ?.split('\n')
     .filter((line: string) => line.trim())
     .map((line: string) => {
-      if (line.startsWith('## ')) return `<h2>${line.replace('## ', '')}</h2>`
-      if (line.startsWith('# ')) return `<h1>${line.replace('# ', '')}</h1>`
-      if (line.startsWith('**') && line.endsWith('**')) return `<strong>${line.replace(/\*\*/g, '')}</strong>`
-      return `<p>${line}</p>`
+      if (line.startsWith('## ')) return `<h2>${inlineFormat(line.slice(3))}</h2>`
+      if (line.startsWith('# '))  return `<h1>${inlineFormat(line.slice(2))}</h1>`
+      if (line.startsWith('### ')) return `<h3>${inlineFormat(line.slice(4))}</h3>`
+      // Bullet points: * text or - text
+      if (/^[*-] /.test(line)) return `<li>${inlineFormat(line.slice(2))}</li>`
+      // Numbered list: 1. text
+      if (/^\d+\. /.test(line)) return `<li>${inlineFormat(line.replace(/^\d+\. /, ''))}</li>`
+      return `<p>${inlineFormat(line)}</p>`
     })
     .join('')
+    // Wrap consecutive <li> items in <ul>
+    .replace(/((<li>[\s\S]*?<\/li>)\s*)+/g, '<ul>$&</ul>')
 
   return (
     <main className="min-h-screen flex flex-col bg-[#FAFAFA]">
@@ -111,8 +123,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           className="prose prose-zinc max-w-none text-[#09090B]
             [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mt-10 [&_h1]:mb-4 [&_h1]:text-[#09090B]
             [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-[#09090B]
+            [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:text-[#09090B]
             [&_p]:text-[#3F3F46] [&_p]:leading-relaxed [&_p]:mb-5
-            [&_strong]:font-semibold [&_strong]:text-[#09090B]"
+            [&_strong]:font-semibold [&_strong]:text-[#09090B]
+            [&_ul]:mb-5 [&_ul]:pl-5 [&_ul]:list-disc
+            [&_li]:text-[#3F3F46] [&_li]:leading-relaxed [&_li]:mb-2"
           dangerouslySetInnerHTML={{ __html: paragraphs || '' }}
         />
 
