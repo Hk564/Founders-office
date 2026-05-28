@@ -1,4 +1,4 @@
-import { getMemory } from '@/lib/supabase'
+﻿import { getMemory } from '@/lib/supabase'
 import { daysUntil } from '@/lib/utils'
 import Marquee from '@/components/Marquee'
 import Footer from '@/components/Footer'
@@ -8,8 +8,8 @@ import { supabase } from '@/lib/supabase'
 export const revalidate = 3600
 
 const projects = [
-  { name: 'Mylestones', description: 'E-commerce platform built 0â†’1 in 3 months', tag: '0-1 Product' },
-  { name: 'Paaltu', description: 'Pet socialisation app â€” co-founder', tag: 'Co-founder' },
+  { name: 'Mylestones', description: 'E-commerce platform built 0-1 in 3 months', tag: '0-1 Product' },
+  { name: 'Paaltu', description: 'Pet socialisation app â€" co-founder', tag: 'Co-founder' },
   { name: 'AI Regulatory Agent', description: 'Automated compliance agent using n8n + GPT', tag: 'AI Agent' },
 ]
 
@@ -46,10 +46,10 @@ export default async function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
 
-      {/* â”€â”€ MARQUEE HEADER â”€â”€ */}
+      {/* â"€â"€ MARQUEE HEADER â"€â"€ */}
       <Marquee items={marqueeItems} />
 
-      {/* â”€â”€ HERO â”€â”€ */}
+      {/* â"€â"€ HERO â"€â"€ */}
       <section className="flex flex-col items-center justify-center px-6 py-24 md:py-32 text-center bg-[#FAFAFA]">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-6">
@@ -66,11 +66,11 @@ export default async function HomePage() {
           </p>
 
           {/* Video */}
-          <div className=”relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-12 aspect-video”>
+          <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-12 aspect-video">
             <iframe
-              src=”https://drive.google.com/file/d/1aRphuceskmkUnM_clFRGz2O1EAFhwWN6/preview”
-              className=”w-full h-full”
-              allow=”autoplay”
+              src="https://drive.google.com/file/d/1aRphuceskmkUnM_clFRGz2O1EAFhwWN6/preview"
+              className="w-full h-full"
+              allow="autoplay"
               allowFullScreen
             />
           </div>
@@ -92,7 +92,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â”€â”€ JOURNEY + SKILLS â”€â”€ */}
+      {/* â"€â"€ JOURNEY + SKILLS â"€â"€ */}
       <section className="px-6 py-24 bg-[#EDE9FE]">
         <div className="max-w-5xl mx-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-3">
@@ -130,7 +130,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â”€â”€ WHY NOT ME â”€â”€ */}
+      {/* â"€â"€ WHY NOT ME â"€â"€ */}
       <section className="px-6 py-24 bg-[#09090B]">
         <div className="max-w-5xl mx-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-3">
@@ -170,14 +170,14 @@ export default async function HomePage() {
             </>
           ) : (
             <div className="text-center py-20">
-              <p className="text-[#52525B] text-lg">Articles loading â€” engine is running.</p>
+              <p className="text-[#52525B] text-lg">Articles loading â€" engine is running.</p>
               <p className="text-[#71717A] text-sm mt-2">Check back tomorrow.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* â”€â”€ FOOTER â”€â”€ */}
+      {/* â"€â"€ FOOTER â"€â"€ */}
       <Footer memory={memory} />
     </main>
   )
