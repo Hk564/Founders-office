@@ -66,15 +66,13 @@ export default async function HomePage() {
           </p>
 
           {/* Video */}
-          <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden bg-[#09090B] aspect-video shadow-2xl group cursor-pointer mb-12">
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-[#6E4CEF] flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-              <p className="text-[#52525B] text-sm">My intro â€” 90 seconds</p>
-            </div>
+          <div className=”relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-12 aspect-video”>
+            <iframe
+              src=”https://drive.google.com/file/d/1aRphuceskmkUnM_clFRGz2O1EAFhwWN6/preview”
+              className=”w-full h-full”
+              allow=”autoplay”
+              allowFullScreen
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
