@@ -53,17 +53,17 @@ export default async function HomePage() {
       <section className="relative min-h-screen overflow-hidden bg-[#09090B]">
 
         {/* YouTube background video */}
-        <div className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
           <iframe
-            src="https://www.youtube.com/embed/YRPM-8Bxn_o?autoplay=1&mute=1&loop=1&controls=0&playlist=YRPM-8Bxn_o&playsinline=1&rel=0&modestbranding=1"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
-            style={{ border: 'none', minWidth: '177.78vh', minHeight: '56.25vw' }}
+            src="https://www.youtube.com/embed/YRPM-8Bxn_o?autoplay=1&mute=1&loop=1&controls=0&playlist=YRPM-8Bxn_o&playsinline=1&rel=0&modestbranding=1&cc_load_policy=0&iv_load_policy=3"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            style={{ border: 'none', minWidth: '177.78vh', minHeight: '56.25vw', width: '100%', height: '115%', pointerEvents: 'none' }}
             allow="autoplay; fullscreen"
           />
         </div>
 
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/55" />
+        {/* Dark overlay — also blocks YouTube controls from showing on hover */}
+        <div className="absolute inset-0 bg-black/50" />
 
         {/* Content — left side */}
         <div className="relative z-10 flex flex-col justify-center min-h-screen px-8 md:px-16">
