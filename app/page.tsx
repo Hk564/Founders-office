@@ -49,47 +49,54 @@ export default async function HomePage() {
       {/* â"€â"€ MARQUEE HEADER â"€â"€ */}
       <Marquee items={marqueeItems} />
 
-      {/* â"€â"€ HERO â"€â"€ */}
-      <section className="flex flex-col items-center justify-center px-6 py-24 md:py-32 text-center bg-[#FAFAFA]">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-6">
-            Cool, you found me!.
-          </p>
-          <h1 className="text-5xl md:text-7xl font-bold text-[#09090B] leading-[1.1] mb-6">
-            Hi, I&apos;m{' '}
-            <span className="text-[#6E4CEF]">
-              {memory.name?.split(' ')[0] || 'Harshitha'}
-            </span>.
-          </h1>
-          <p className="text-xl md:text-2xl text-[#71717A] leading-relaxed mb-12 max-w-2xl mx-auto">
-            {memory.bio}
-          </p>
+      {/* HERO - full bleed video */}
+      <section className="relative min-h-screen overflow-hidden bg-[#09090B]">
 
-          {/* Video */}
-          <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-12 aspect-video">
-            <iframe
-              src="https://drive.google.com/file/d/1aRphuceskmkUnM_clFRGz2O1EAFhwWN6/preview"
-              className="w-full h-full"
-              allow="autoplay"
-              allowFullScreen
-            />
-          </div>
+        {/* YouTube background video */}
+        <div className="absolute inset-0 w-full h-full">
+          <iframe
+            src="https://www.youtube.com/embed/YRPM-8Bxn_o?autoplay=1&mute=1&loop=1&controls=0&playlist=YRPM-8Bxn_o&playsinline=1&rel=0&modestbranding=1"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
+            style={{ border: 'none', minWidth: '177.78vh', minHeight: '56.25vw' }}
+            allow="autoplay; fullscreen"
+          />
+        </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/blog"
-              className="px-8 py-3 bg-[#6E4CEF] text-white rounded-full font-medium hover:bg-[#5B21B6] transition-colors"
-            >
-              Read the articles
-            </Link>
-            <a
-              href={`mailto:${memory.email}`}
-              className="px-8 py-3 border border-[#E4E4E7] text-[#09090B] rounded-full font-medium hover:border-[#6E4CEF] hover:text-[#6E4CEF] transition-colors"
-            >
-              Get in touch
-            </a>
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/55" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-6">
+              Cool, you found me!
+            </p>
+            <h1 className="text-5xl md:text-7xl font-bold text-white leading-[1.1] mb-6">
+              Hi, I&apos;m{' '}
+              <span className="text-[#6E4CEF]">
+                {memory.name?.split(' ')[0] || 'Harshitha'}
+              </span>.
+            </h1>
+            <p className="text-xl md:text-2xl text-white/70 leading-relaxed mb-12 max-w-2xl mx-auto">
+              {memory.bio}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/blog"
+                className="px-8 py-3 bg-[#6E4CEF] text-white rounded-full font-medium hover:bg-[#5B21B6] transition-colors"
+              >
+                Read the articles
+              </Link>
+              <a
+                href={`mailto:${memory.email}`}
+                className="px-8 py-3 border border-white/30 text-white rounded-full font-medium hover:border-[#6E4CEF] hover:text-[#6E4CEF] transition-colors"
+              >
+                Get in touch
+              </a>
+            </div>
           </div>
         </div>
+
       </section>
 
       {/* â"€â"€ JOURNEY + SKILLS â"€â"€ */}
