@@ -65,9 +65,9 @@ export default async function HomePage() {
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/55" />
 
-        {/* Content — right side so it doesn't clash with video captions on the left */}
+        {/* Content — left side */}
         <div className="relative z-10 flex flex-col justify-center min-h-screen px-8 md:px-16">
-          <div className="ml-auto max-w-lg text-right">
+          <div className="max-w-lg text-left">
             <p className="text-xs uppercase tracking-[0.2em] text-[#6E4CEF] font-medium mb-6">
               Cool, you found me!
             </p>
@@ -80,7 +80,7 @@ export default async function HomePage() {
             <p className="text-lg text-white/70 leading-relaxed mb-10">
               {memory.bio}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-end">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/blog"
                 className="px-8 py-3 bg-[#6E4CEF] text-white rounded-full font-medium hover:bg-[#5B21B6] transition-colors"
